@@ -2,6 +2,9 @@ from django.shortcuts import render,redirect
 from .models import UserInfo
 from hashlib import sha1
 from django.http import JsonResponse, HttpResponseRedirect
+from user_articles.models import Artical
+from django.core.paginator import  Paginator, Page
+from . import models
 
 
 def login(request):
@@ -36,6 +39,10 @@ def login_handle(request):
         context = { 'error_phone': 1, 'error_pwd': 0, 'userphone': userphone, 'userpassword': userpassword}
         return render(request, 'user/login.html', context)
 
+def logout(request):
+    request.session.flush()
+    return redirect('/')
+
 def  register(request):
    return render(request, 'user/register.html')
 
@@ -60,5 +67,32 @@ def register_handle(request):
     user.save()
     return redirect('/user/login/')
 
+def register_exist(request):
+    username = request.GET.get('username')
+    count = models.UserInfo.objects.filter(username=username).count()
+    return JsonResponse({'count':count})
 
+def info(request):
+    uid = request.session['user_id']
+    user = UserInfo.objects.get(pk=int(uid))
+    if request.method == "POST":
+        user.username = request.POST.get('name')
+        user.userpic = request.POST.get('pic')
+        user.save()
+    context = {
+        'user':user,
+    }
+    return render(request,'user/detail.html',context)
+
+def articles(request,pindex):
+    uid = request.COOKIES.get('user_id')
+    article_list = Artical.objects.filter(uid=uid).order_by('-createdate')
+    paginator = Paginator(article_list, 10)
+    page = paginator.page(int(pindex))
+    context = {
+        'page': page,
+        'pahinator': paginator,
+        'list': 1
+    }
+    return render(request,'user/articles.html',context)
 
