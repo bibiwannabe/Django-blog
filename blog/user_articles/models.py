@@ -10,4 +10,11 @@ class Artical(models.Model):
     uid = models.ForeignKey('user.UserInfo')
     def __str__(self):
         return self.title
-# Create your models here.
+
+class Comment(models.Model):
+    uid = models.ForeignKey('user.UserInfo')
+    aid = models.ForeignKey('user_articles.Artical')
+    date = models.DateTimeField(auto_now=True)
+    text = models.TextField()
+
+

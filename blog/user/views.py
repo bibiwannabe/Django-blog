@@ -3,7 +3,7 @@ from .models import UserInfo
 from hashlib import sha1
 from django.http import JsonResponse, HttpResponseRedirect
 from user_articles.models import Artical
-from django.core.paginator import  Paginator, Page
+from django.core.paginator import Paginator
 from . import models
 
 
@@ -91,7 +91,7 @@ def articles(request,pindex):
     page = paginator.page(int(pindex))
     context = {
         'page': page,
-        'pahinator': paginator,
+        'paginator': paginator,
         'list': 1
     }
     return render(request,'user/articles.html',context)
@@ -101,5 +101,5 @@ def detail(request,pid):
     context = {
         'article':article
     }
-    return render(request,'user/userart_detail.html')
+    return render(request,'user/userart_detail.html',context)
 
