@@ -96,3 +96,10 @@ def articles(request,pindex):
     }
     return render(request,'user/articles.html',context)
 
+def detail(request,pid):
+    article = Artical.objects.get(pk=int(pid))
+    context = {
+        'article':article
+    }
+    return render(request,'user/userart_detail.html')
+
