@@ -98,6 +98,9 @@ def articles(request,pindex):
 
 def detail(request,pid):
     article = Artical.objects.get(pk=int(pid))
+    if request.method == 'POST':
+        article.title = request.POST.get('title')
+        article.content = request.POST.get('content')
     context = {
         'article':article
     }
